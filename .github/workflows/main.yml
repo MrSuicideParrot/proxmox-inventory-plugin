@@ -1,0 +1,55 @@
+
+name: CI
+
+# Only build releases when a new tag is pushed.
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Extract the version from the tag name so it can be used later.
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
+      # Install a recent version of Python 3
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      # Install our dependencies, e.g. Ansible
+      - name: Install Python 3.7
+        run: python3.7 -m pip install -r requirements.txt
+
+      - name: Build the Ansible collection
+        run: |
+          mkdir -p build
+          ansible-galaxy collection build -f --output-path build
+
+      - name: Create a Release
+        id: create_a_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+
+      - name: Upload a Release Asset
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_a_release.outputs.upload_url }}
+          asset_path: build/mrsuicideparrot-proxmox_plugin-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          asset_name: "mrsuicideparrot-proxmox_plugin-${{ steps.get_version.outputs.VERSION }}.tar.gz"
+          asset_content_type: "application/gzip"
