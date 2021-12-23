@@ -15,7 +15,7 @@ import socket
 import re
 
 ANSIBLE_METADATA = {
-    'metadata_version': '0.0.1',
+    'metadata_version': '0.0.2',
     'status': ['preview'],
     'supported_by': 'community'
 }
@@ -39,7 +39,7 @@ options:
         required: True
         env:
             - name: PROXMOX_URL
-    username:
+    user:
         description: proxmox authentication user
         type: str
         required: True
@@ -306,7 +306,7 @@ class InventoryModule(BaseInventoryPlugin):
 
         self._read_config_data(path)
 
-        proxmoxInstance = ProxmoxAPI(self.get_option('url'), self.get_option('username'), self.get_option('password'), self.get_option('validate_certs'))
+        proxmoxInstance = ProxmoxAPI(self.get_option('url'), self.get_option('user'), self.get_option('password'), self.get_option('validate_certs'))
 
         for node in proxmoxInstance.nodes().get_names():
             try:
