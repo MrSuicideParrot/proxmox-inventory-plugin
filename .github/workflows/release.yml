@@ -1,5 +1,5 @@
 
-name: CI-release
+name: release-pipeline
 
 # Only build releases when a new tag is pushed.
 on:
