@@ -14,7 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Extract the version from the tag name so it can be used later.
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
@@ -52,7 +51,7 @@ jobs:
           asset_name: "mrsuicideparrot-proxmox_plugin-${{ steps.get_version.outputs.VERSION }}.tar.gz"
           asset_content_type: "application/gzip"
 
-      - name: Push to Ansible Galaxy
-        uses: robertdebock/galaxy-action@1.1.0
+      - name: Build and Deploy Collection
+        uses: artis3n/ansible_galaxy_collection@v2
         with:
-          galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
+          api_key: '${{ secrets.GALAXY_API_KEY }}'
