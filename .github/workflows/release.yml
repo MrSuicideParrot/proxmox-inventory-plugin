@@ -51,7 +51,9 @@ jobs:
           asset_name: "mrsuicideparrot-proxmox_plugin-${{ steps.get_version.outputs.VERSION }}.tar.gz"
           asset_content_type: "application/gzip"
 
-      - name: Build and Deploy Collection
-        uses: artis3n/ansible_galaxy_collection@v2
-        with:
-          api_key: '${{ secrets.GALAXY_API_KEY }}'
+      - name: Upload collection
+        env:
+          GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: |
+          ansible-galaxy collection publish build/mrsuicideparrot-proxmox_plugin-$VERSION.tar.gz --api-key=$GALAXY_API_KEY
