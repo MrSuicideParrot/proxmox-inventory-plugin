@@ -1,0 +1,5 @@
+plugin: "mrsuicideparrot.proxmox_plugin.inventory"
+url: https://localhost:8006
+user: apiuser@pve
+password: secure
+validate_certs: True
