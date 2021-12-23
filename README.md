@@ -51,7 +51,7 @@ ansible-inventory --list -i my.proxmox.yml
 
 You should see a list of nodes from your Proxmox Cluster.
 
---
+---
 #### Acknowledgments
 
 This project was based on [xezpeleta/Ansible-Proxmox-inventory](https://github.com/xezpeleta/Ansible-Proxmox-inventory). Ansible is deprecating inventory scripts. The new recomended way is to create an inventory plugin and package it as an Ansible collection. 
