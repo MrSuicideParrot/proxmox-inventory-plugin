@@ -19,15 +19,13 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
-      # Install a recent version of Python 3
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: 3.8
 
-      # Install our dependencies, e.g. Ansible
-      - name: Install Python 3.7
-        run: python3.7 -m pip install -r requirements.txt
+      - name: Install Python dependecies
+        run: python3.8 -m pip install -r requirements.txt
 
       - name: Build the Ansible collection
         run: |
