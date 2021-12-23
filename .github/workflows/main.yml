@@ -1,11 +1,12 @@
 
 name: CI
 
-# Only build releases when a new tag is pushed.
 on:
   push:
-    tags:
-      - '*'
+    branches:    
+      - master
+    tags-ignore:
+      - *
 
 jobs:
   build:
@@ -13,11 +14,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-      # Extract the version from the tag name so it can be used later.
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -32,27 +28,8 @@ jobs:
           mkdir -p build
           ansible-galaxy collection build -f --output-path build
 
-      - name: Create a Release
-        id: create_a_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
-          tag_name: ${{ steps.get_version.outputs.VERSION }}
-          release_name: Release ${{ steps.get_version.outputs.VERSION }}
-          draft: false
-
-      - name: Upload a Release Asset
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_a_release.outputs.upload_url }}
-          asset_path: build/mrsuicideparrot-proxmox_plugin-${{ steps.get_version.outputs.VERSION }}.tar.gz
-          asset_name: "mrsuicideparrot-proxmox_plugin-${{ steps.get_version.outputs.VERSION }}.tar.gz"
-          asset_content_type: "application/gzip"
-
-      - name: Push to Ansible Galaxy
-        uses: robertdebock/galaxy-action@1.1.0
-        with:
-          galaxy_api_key: ${{ secrets.galaxy_api_key }}
+          name: mrsuicideparrot-proxmox_plugin.tar.gz
+          path: build/mrsuicideparrot-proxmox_plugin-*.tar.gz   
