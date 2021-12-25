@@ -12,7 +12,7 @@ ansible-galaxy install mrsuicideparrot.proxmox_plugin
 
 ## Similar projects
 
-[xezpeleta/Ansible-Proxmox-inventory](https://github.com/xezpeleta/Ansible-Proxmox-inventory) is a inventory scripts. It offers definition of custom variables using Proxmox notes. However, ansible is deprecating inventory scripts. The new recomended way is to create an inventory plugin and package it as an Ansible Collection.
+[xezpeleta/Ansible-Proxmox-inventory](https://github.com/xezpeleta/Ansible-Proxmox-inventory) is an inventory script. It offers definition of custom variables using Proxmox notes. However, ansible is deprecating inventory scripts. The new recomended way is to create an inventory plugin and package it as an Ansible Collection.
 
 [ansible-collections/community.general](https://github.com/ansible-collections/community.general/blob/2d6816e11e1672df5b2aa485e8af9eaa45d7c5be/plugins/inventory/proxmox.py) is an Ansible Collection that has an inventory plugin for Proxmox. This plugin doesn't support custom variables.
 
