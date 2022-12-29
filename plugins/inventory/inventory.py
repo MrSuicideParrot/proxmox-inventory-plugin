@@ -15,8 +15,7 @@ import socket
 import re
 
 ANSIBLE_METADATA = {
-    'metadata_version': '0.0.2',
-    'status': ['preview'],
+    'metadata_version': '1.0.0',
     'supported_by': 'community'
 }
 
@@ -55,6 +54,10 @@ options:
         description: verify SSL certificate if using https
         type: boolean
         default: true
+    group_tags:
+        description: interpretation of user-defined tags as ansible groups
+        type: boolean
+        default: false
 '''
 
 EXAMPLES = '''
@@ -64,6 +67,7 @@ url: https://localhost:8006
 user: apiuser@pve
 password: secure
 validate_certs: True
+group_tags: False
 '''
 
 class SystemInfo(object):
@@ -339,10 +343,18 @@ class InventoryModule(BaseInventoryPlugin):
                 except KeyError:
                     type = 'qemu'
                     self.inventory.set_variable(vm, 'proxmox_type', 'qemu')
+
+                data = proxmoxInstance.vm_description_by_type(node, vmid, type)
+
                 try:
-                    description = proxmoxInstance.vm_description_by_type(node, vmid, type)['description']
+                    description = data['description']
                 except KeyError:
                     description = None
+
+                try:
+                    tags = data['tags']
+                except KeyError:
+                    tags = None
 
                 try:
                     metadata = json.loads(description)
@@ -368,6 +380,11 @@ class InventoryModule(BaseInventoryPlugin):
                 
                 if 'groups' in metadata:
                     for group in metadata['groups']:
+                        self.inventory.add_group(group)
+                        self.inventory.add_child(group, vm)
+
+                if tags is not None and self.get_option("group_tags"):
+                    for group in tags.split(";"):
                         self.inventory.add_group(group)
                         self.inventory.add_child(group, vm)
 

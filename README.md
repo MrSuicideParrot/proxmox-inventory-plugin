@@ -28,6 +28,7 @@ url: https://localhost:8006
 user: apiuser@pve
 password: secure
 validate_certs: True
+group_tags: False
 ```
 
 > You should create a user with least privileges possible. You need the following privileges: VM.Audit, VM.Monitor, SDN.Audit, Sys.Audit, Pool.Audit, Datastore.Audit. For now, we don't support Proxmox API tokens, only passwords.
@@ -66,6 +67,9 @@ A definition of multiple variables would be:
 ```JSON
 { "groups": ["docker", "server"], "ansible_user":"root", "custom_variable":"things" }
 ```
+
+Furthermore, if you enable *group_tags* you can use the *tags* you define for each virtual guest as ansible groups.
+> This feature requires at least Proxmox VE 7.3.
 
 ## Requirements
 
