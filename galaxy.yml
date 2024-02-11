@@ -1,6 +1,6 @@
 namespace: mrsuicideparrot
 name: proxmox_plugin
-version: 1.0.0
+version: 0.0.3
 readme: README.md
 authors:
 - André Cirne
